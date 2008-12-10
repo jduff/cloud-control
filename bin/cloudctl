@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
-require 'lib/cloud_control'
+require File.dirname(__FILE__) + '/../lib/cloud_control'
 CloudControl::Manager.execute

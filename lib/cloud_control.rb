@@ -1,9 +1,9 @@
 require 'optparse'
 require 'rubygems'
 require 'pp'
-require 'lib/cloud_control/base'
-require 'lib/cloud_control/start'
-require 'lib/cloud_control/provision'
+require File.dirname(__FILE__) + '/../lib/cloud_control/base'
+require File.dirname(__FILE__) + '/../lib/cloud_control/start'
+require File.dirname(__FILE__) + '/../lib/cloud_control/provision'
 
 module CloudControl
   class Manager
@@ -17,9 +17,11 @@ module CloudControl
       args = ARGV.reverse
       @options = {
         :environment => "staging",
-        :action => "deploy",
-        :aws_config_path => "cloud/aws.yml"
-        :sprinkle_config_path => "cloud/sprinkle/sprinkle.rb"
+        # :action => "deploy",
+        :aws_config_path => "cloud/aws.yml",
+        :sprinkle_config_path => "cloud/sprinkle/sprinkle.rb",
+        :capistrano_config_template_path => "cloud/deploy.rb.erb",
+        :capistrano_config_output_path => "config/deploy.rb"
       }
     
       if args.empty?

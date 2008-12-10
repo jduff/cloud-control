@@ -13,7 +13,7 @@ class Provision < CloudControl::Base
   def execute
     load_state
     
-    Sprinkle::Script.sprinkle CloudControl::Manager.options[:sprink_config_path], CloudControl::Manager.options[:sprink_config_path]
+    Sprinkle::Script.sprinkle File.read(CloudControl::Manager.options[:sprinkle_config_path]), CloudControl::Manager.options[:sprinkle_config_path]
     
     #save_state
   end

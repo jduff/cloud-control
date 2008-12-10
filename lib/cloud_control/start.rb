@@ -1,4 +1,7 @@
 require 'ec2'
+require 'ostruct'
+require 'erb'
+
 
 class Start < CloudControl::Base
 
@@ -15,10 +18,17 @@ class Start < CloudControl::Base
   end
 
   def execute
-    load_state
+    # load_state
     load_aws_config
     start_instance
+    generate_cap_config
     save_state
+  end
+  
+  def generate_cap_config
+    deployment_configuration = OpenStruct.new(deployment)
+    capistrano_config = ERB.new(File.read(CloudControl::Manager.options[:capistrano_config_template_path])).result(deployment_configuration.send(:binding))
+    File.open(CloudControl::Manager.options[:capistrano_config_output_path], 'w') << capistrano_config
   end
   
   def load_aws_config
@@ -32,7 +42,6 @@ class Start < CloudControl::Base
     deployment[:reservation_id] = run_response.reservationId
     puts 'Instance starting, reservation id: ' + deployment[:reservation_id]
     
-    
     puts 'Waiting for instance to register ...'
     while(deployment[:private_hostname].nil? && deployment[:public_hostname].nil?)
       sleep 2
@@ -40,14 +49,15 @@ class Start < CloudControl::Base
       describe_response.reservationSet.item.each do |instance|
 
         if instance.reservationId == deployment[:reservation_id]
-          deployment[:private_hostname] = instance.instancesSet.item.first.instanceId
+          deployment[:instange_id] = instance.instancesSet.item.first.instanceId
           deployment[:private_hostname] = instance.instancesSet.item.first.privateDnsName
           deployment[:public_hostname] = instance.instancesSet.item.first.dnsName
+          (deployment[:ssh_keys] = []) << @aws_config["key_file"]
           break
         end
       end
     end
-    puts 'Instance started, instance id: ' + deployment[:private_hostname]
+    puts 'Instance started, instance id: ' + deployment[:instange_id]
     
   end
   

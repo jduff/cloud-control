@@ -3,3 +3,4 @@ Initial Command:
 == cloudctl ENV start
 DONE * Start an instance of an EC2 AMI
 * Sprinkle the instance
+* Generate layout for app
