@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
-require 'cloud_control'
-CloudControl.test
+require 'lib/cloud_control'
+CloudControl::Manager.execute

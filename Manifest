@@ -1,6 +1,8 @@
 bin/cloudctl
 CHANGELOG
+lib/cloud_control/provisioner.rb
 lib/cloud_control.rb
 Manifest
 Rakefile
 README
+TODO
