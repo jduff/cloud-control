@@ -8,13 +8,13 @@ module CloudControl
     end
 
     def save_state
-      File.open('cloud_control.state', 'w') do |state|
+      File.open('cloud/cloud_control.state', 'w') do |state|
         YAML.dump(deployment, state)
       end
     end
     
     def load_state
-      @deployment = YAML.load_file('cloud_control.state') if File.exists?('cloud_control.state')
+      @deployment = YAML.load_file('cloud/cloud_control.state') if File.exists?('cloud/cloud_control.state')
     end
     
     def self.get_actions(actions)

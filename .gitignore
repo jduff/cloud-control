@@ -1,3 +1,4 @@
 pkg
 cloud_control.state
 aws.yml
+.DS_Store

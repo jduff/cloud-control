@@ -2,12 +2,13 @@ require 'optparse'
 require 'rubygems'
 require 'pp'
 require File.dirname(__FILE__) + '/../lib/cloud_control/base'
+require File.dirname(__FILE__) + '/../lib/cloud_control/init'
 require File.dirname(__FILE__) + '/../lib/cloud_control/start'
 require File.dirname(__FILE__) + '/../lib/cloud_control/provision'
 
 module CloudControl
   class Manager
-    AVAILABLE_ACTIONS = %w{ start provision deploy snapshot }
+    AVAILABLE_ACTIONS = %w{ init start provision deploy snapshot }
   
     class << self
       attr_accessor :options
@@ -23,17 +24,13 @@ module CloudControl
         :capistrano_config_template_path => "cloud/deploy.rb.erb",
         :capistrano_config_output_path => "config/deploy.rb"
       }
-    
-      if args.empty?
-        args = ["-h"]
-      end
       
-      @options[:action] = args.pop
-      @options[:environment] = args.pop
-      
+      @options[:action] = ARGV.pop
+      @options[:environment] = ARGV.pop
+   
       if !AVAILABLE_ACTIONS.include?(@options[:action])
         puts "Sorry, \"#{@options[:action]}\" is not a valid action to preform."
-        args = ["-h"]
+        exit(1)
       end
 
       # The following is for automatic chaining of actions, maybe useful in the future
@@ -43,7 +40,7 @@ module CloudControl
       actions = CloudControl::Base.get_actions([@options[:action]])
 
       opts = OptionParser.new do |opts|
-        opts.banner = "Usage: #{File.basename($0)} environment action [options]"
+        opts.banner = "Usage: #{File.basename($0)} [options] environment action"
 
         actions.each do |action|
           action.class.options(opts) # Build options from action class
@@ -61,7 +58,7 @@ module CloudControl
       end
 
       opts.parse!
-
+      
       actions.each do |action|
         action.execute
       end
