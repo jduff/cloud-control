@@ -23,11 +23,7 @@ class CloudGenerator < RubiGen::Base
     windows            = (RUBY_PLATFORM =~ /dos|win32|cygwin/i) || (RUBY_PLATFORM =~ /(:?mswin|mingw)/)
     
     record do |m|
-      # Root directory and all subdirectories.
       m.directory 'cloud/sprinkle/packages'
-      
-      # Root
-      # m.template_copy_each %w( Rakefile )
       m.file_copy_each     %w( 
                                 aws.yml
                                 deploy.rb.erb
@@ -35,17 +31,6 @@ class CloudGenerator < RubiGen::Base
                                 sprinkle/packages/apache.rb
                                 sprinkle/packages/essential.rb
                              ), 'cloud'
-
-      # Test helper
-      # m.template   "test_helper.rb",        "test/test_helper.rb"
-
-      # Scripts
-      # %w( generate ).each do |file|
-      #   m.template "script/#{file}",        "script/#{file}", script_options
-      #   m.template "script/win_script.cmd", "script/#{file}.cmd", 
-      #     :assigns => { :filename => file } if windows
-      # end
-   
     end
   end
 

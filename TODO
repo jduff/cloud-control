@@ -1,6 +1,9 @@
 Initial Command:
 
-== cloudctl ENV start
+* Define sprinkle scripts for setting up HAProxy Node
+* Define sprinkle scripts for setting up Database Node
+
+
 DONE * Start an instance of an EC2 AMI
-* Sprinkle the instance
-* Generate layout for app
+DONE * Sprinkle the instance
+DONE * Generate layout for app
