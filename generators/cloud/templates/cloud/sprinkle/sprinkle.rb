@@ -1,5 +1,7 @@
 require 'cloud/sprinkle/packages/essential'
 require 'cloud/sprinkle/packages/apache'
+require 'cloud/sprinkle/packages/haproxy'
+require 'cloud/sprinkle/packages/mysql'
  
  
 # Policies
@@ -15,7 +17,16 @@ policy :rails, :roles => :app do
   requires :build_essential
   requires :apache
 end
- 
+
+policy :database, :roles => :db do
+  requires :build_essential
+  requires :mysql
+end
+  
+policy :balancer, :roles => :balancer do
+  requires :build_essential
+  requires :haproxy
+end 
  
 # Deployment
 #

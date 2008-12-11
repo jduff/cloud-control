@@ -10,9 +10,9 @@ set :application, "Sample Application"
 # your SCM below:
 # set :scm, :subversion
 
-role :app, "<%= public_hostname %>"
-# role :web, "your web-server here"
-# role :db,  "your db-server here", :primary => true
+<% roles.each do |role| %>
+role :<%= role %>, "<%= send(role.to_sym)[:public_hostname] %>"
+<% end %>
 
 ssh_options[:keys] = %w(<%= ssh_keys.join(' ') %>)
 

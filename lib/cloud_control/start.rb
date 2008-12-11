@@ -10,11 +10,6 @@ class Start < CloudControl::Base
   
   def self.options(opts)
     
-    opts.on("-c", "Provisioner options") do
-      CloudControl::Manager.options[:c] = true
-      puts "Setting options from provisioner"
-    end
-    
   end
 
   def execute
@@ -37,28 +32,44 @@ class Start < CloudControl::Base
   end
   
   def start_instance
-    puts 'Running instance ...'
-    run_response = @ec2.run_instances(:key_name => @aws_config["key_name"], :image_id => @aws_config["base_ami_id"], :group_id => @aws_config["ssh_security_group"])
-    deployment[:reservation_id] = run_response.reservationId
-    puts 'Instance starting, reservation id: ' + deployment[:reservation_id]
+    puts 'Running instances ...'
     
-    puts 'Waiting for instance to register ...'
-    while(deployment[:private_hostname].nil? && deployment[:public_hostname].nil?)
+    deployment[:roles] = %w(balancer app db)
+    deployment[:ssh_keys] = [@aws_config["key_file"]]
+    
+    run_instances_for_roles(deployment[:roles])
+    
+    puts 'Waiting for instances to register ...'
+    roles = deployment[:roles].dup
+    while(roles.size > 0)
       sleep 2
       describe_response = @ec2.describe_instances
       describe_response.reservationSet.item.each do |instance|
 
-        if instance.reservationId == deployment[:reservation_id]
-          deployment[:instange_id] = instance.instancesSet.item.first.instanceId
-          deployment[:private_hostname] = instance.instancesSet.item.first.privateDnsName
-          deployment[:public_hostname] = instance.instancesSet.item.first.dnsName
-          (deployment[:ssh_keys] = []) << @aws_config["key_file"]
-          break
+        if deployment[:reservation_ids].include?(instance.reservationId) && instance_running?(instance)
+          deployment[:reservation_ids].delete(instance.reservationId)
+          role = roles.pop
+          deployment[role.to_sym] = {}
+          puts "#{role} instance running."
+          deployment[role.to_sym][:instange_id] = instance.instancesSet.item.first.instanceId
+          deployment[role.to_sym][:private_hostname] = instance.instancesSet.item.first.privateDnsName
+          deployment[role.to_sym][:public_hostname] = instance.instancesSet.item.first.dnsName
         end
       end
     end
-    puts 'Instance started, instance id: ' + deployment[:instange_id]
     
+  end
+  
+  def run_instances_for_roles(roles)
+    deployment[:roles].each do |role|
+      run_response = @ec2.run_instances(:key_name => @aws_config["key_name"], :image_id => @aws_config["base_ami_id"], :group_id => @aws_config["ssh_security_group"])
+      (deployment[:reservation_ids] ||= []) << run_response.reservationId
+      puts "Instance starting for role #{role}, reservation id: " + run_response.reservationId
+    end
+  end
+  
+  def instance_running?(instance)
+    instance.instancesSet.item.first.instanceState.name == "running"
   end
   
 end

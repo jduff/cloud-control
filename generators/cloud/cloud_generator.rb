@@ -30,6 +30,8 @@ class CloudGenerator < RubiGen::Base
                                 sprinkle/sprinkle.rb
                                 sprinkle/packages/apache.rb
                                 sprinkle/packages/essential.rb
+                                sprinkle/packages/haproxy.rb
+                                sprinkle/packages/mysql.rb
                              ), 'cloud'
     end
   end
