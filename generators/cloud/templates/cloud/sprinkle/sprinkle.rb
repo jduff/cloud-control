@@ -2,6 +2,7 @@ require 'cloud/sprinkle/packages/essential'
 require 'cloud/sprinkle/packages/apache'
 require 'cloud/sprinkle/packages/haproxy'
 require 'cloud/sprinkle/packages/mysql'
+require 'cloud/sprinkle/packages/rails'
  
  
 # Policies
@@ -13,12 +14,14 @@ require 'cloud/sprinkle/packages/mysql'
 # If there's only one implementation of a virtual package, it's selected automatically, otherwise
 # the user is requested to select which one to use.
  
-policy :rails, :roles => :app do
+policy :rails, :roles => :application do
   requires :build_essential
   requires :apache
+  requires :rails
+  requires :rubygems
 end
 
-policy :database, :roles => :db do
+policy :database, :roles => :database do
   requires :build_essential
   requires :mysql
 end
@@ -43,8 +46,15 @@ deployment do
   delivery :capistrano do
     recipes 'config/deploy'
   end
-  
+
+  # source based package installer defaults
+  source do
+    prefix   '/usr/local'           # where all source packages will be configured to install
+    archives '/usr/local/sources'   # where all source packages will be downloaded to
+    builds   '/usr/local/build'     # where all source packages will be built
+  end
+
 end
- 
+
 # End of script, given the above information, Spinkle will apply the defined policy on all roles using the
 # deployment settings specified.

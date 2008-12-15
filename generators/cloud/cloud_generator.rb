@@ -24,15 +24,22 @@ class CloudGenerator < RubiGen::Base
     
     record do |m|
       m.directory 'cloud/sprinkle/packages'
-      m.file_copy_each     %w( 
+      m.directory 'config/deploy'
+      m.file_copy_each     %w(
                                 aws.yml
-                                deploy.rb.erb
+                                deployment.yml      
+                             ), 'cloud', { :collision => :skip}
+      m.file_copy_each     %w( 
+                                deploy.rb
                                 sprinkle/sprinkle.rb
                                 sprinkle/packages/apache.rb
                                 sprinkle/packages/essential.rb
                                 sprinkle/packages/haproxy.rb
                                 sprinkle/packages/mysql.rb
-                             ), 'cloud'
+                                sprinkle/packages/rails.rb
+                             ), 'cloud', { :collision => :force}
+                             
+      m.file_copy_each     %w( deploy.rb ), 'config', { :collision => :force}
     end
   end
 

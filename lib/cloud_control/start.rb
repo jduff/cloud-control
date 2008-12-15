@@ -7,23 +7,35 @@ class Start < CloudControl::Base
 
   attr_accessor :aws_config
   attr_accessor :ec2
+  attr_accessor :deployment
   
   def self.options(opts)
-    
+    opts.on("-d", "--deployment-config", "Deployment Configuration File") do |deployment_config_path|
+      CloudControl::Manager.options[:deployment_config_path] = deployment_config_path
+    end
   end
 
   def execute
-    # load_state
+    load_state
     load_aws_config
-    start_instance
+    load_deployment_config
+    start_instances
     generate_cap_config
     save_state
   end
   
+  def load_deployment_config
+    deployment_config = YAML.load_file(CloudControl::Manager.options[:deployment_config_path])
+    @deployment = {}
+    @deployment[:roles] = deployment_config.keys
+  end
+  
   def generate_cap_config
     deployment_configuration = OpenStruct.new(deployment)
-    capistrano_config = ERB.new(File.read(CloudControl::Manager.options[:capistrano_config_template_path])).result(deployment_configuration.send(:binding))
-    File.open(CloudControl::Manager.options[:capistrano_config_output_path], 'w') << capistrano_config
+    template_file = File.join(File.dirname(__FILE__), '..', '..', 'templates', 'stage.rb.erb')
+    output_file = File.join(CloudControl::Manager.options[:capistrano_config_output_dir], CloudControl::Manager.options[:environment] + '.rb')
+    capistrano_config = ERB.new(File.read(template_file)).result(deployment_configuration.send(:binding))
+    File.open(output_file, 'w') << capistrano_config
   end
   
   def load_aws_config
@@ -31,10 +43,9 @@ class Start < CloudControl::Base
     @ec2 = EC2::Base.new(:access_key_id => aws_config["access_key_id"], :secret_access_key => aws_config["secret_access_key"])
   end
   
-  def start_instance
+  def start_instances
     puts 'Running instances ...'
     
-    deployment[:roles] = %w(balancer app db)
     deployment[:ssh_keys] = [@aws_config["key_file"]]
     
     run_instances_for_roles(deployment[:roles])

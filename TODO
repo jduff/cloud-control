@@ -2,8 +2,9 @@ Initial Command:
 
 * Define sprinkle scripts for setting up HAProxy Node
 * Define sprinkle scripts for setting up Database Node
+* Figure out how to update the configuration files on the servers
 
-
+DONE * YAML File to define basic deployment configuration
 DONE * Start an instance of an EC2 AMI
 DONE * Sprinkle the instance
 DONE * Generate layout for app

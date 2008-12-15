@@ -1,0 +1,5 @@
+<% roles.each do |role| %>
+role :<%= role %>, "<%= send(role.to_sym)[:public_hostname] %>"
+<% end %>
+
+ssh_options[:keys] = %w(<%= ssh_keys.join(' ') %>)

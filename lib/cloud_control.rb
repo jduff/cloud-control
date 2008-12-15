@@ -22,7 +22,8 @@ module CloudControl
         :aws_config_path => "cloud/aws.yml",
         :sprinkle_config_path => "cloud/sprinkle/sprinkle.rb",
         :capistrano_config_template_path => "cloud/deploy.rb.erb",
-        :capistrano_config_output_path => "config/deploy.rb"
+        :capistrano_config_output_dir => "config/deploy",
+        :deployment_config_path => "cloud/deployment.yml"
       }
       
       @options[:action] = ARGV.pop
