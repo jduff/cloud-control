@@ -1,4 +1,0 @@
-#!/usr/bin/env ruby
-
-require 'cloud_control'
-CloudControl.test
