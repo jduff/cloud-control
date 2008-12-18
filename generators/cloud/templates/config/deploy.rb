@@ -1,4 +1,4 @@
-set :stages, %w(staging production demo qa-test qa-staging qa-regression qa-sanity )
+set :stages, %w( staging production )
 require 'capistrano/ext/multistage'
 
 load 'cloud/deploy.rb'

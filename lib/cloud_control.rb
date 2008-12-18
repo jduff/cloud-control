@@ -1,10 +1,12 @@
 require 'optparse'
 require 'rubygems'
 require 'pp'
+
 require File.dirname(__FILE__) + '/../lib/cloud_control/base'
 require File.dirname(__FILE__) + '/../lib/cloud_control/init'
 require File.dirname(__FILE__) + '/../lib/cloud_control/start'
 require File.dirname(__FILE__) + '/../lib/cloud_control/provision'
+require File.dirname(__FILE__) + '/../lib/cloud_control/deploy'
 
 module CloudControl
   class Manager
@@ -12,12 +14,14 @@ module CloudControl
   
     class << self
       attr_accessor :options
+      attr_accessor :deployment
     end
 
     def self.execute
       args = ARGV.reverse
+      @deployment = {}
       @options = {
-        :environment => "staging",
+        :stage => "staging",
         # :action => "deploy",
         :aws_config_path => "cloud/aws.yml",
         :sprinkle_config_path => "cloud/sprinkle/sprinkle.rb",
@@ -27,7 +31,7 @@ module CloudControl
       }
       
       @options[:action] = ARGV.pop
-      @options[:environment] = ARGV.pop
+      @options[:stage] = ARGV.pop
    
       if !AVAILABLE_ACTIONS.include?(@options[:action])
         puts "Sorry, \"#{@options[:action]}\" is not a valid action to preform."
@@ -41,7 +45,7 @@ module CloudControl
       actions = CloudControl::Base.get_actions([@options[:action]])
 
       opts = OptionParser.new do |opts|
-        opts.banner = "Usage: #{File.basename($0)} [options] environment action"
+        opts.banner = "Usage: #{File.basename($0)} [options] stage action"
 
         actions.each do |action|
           action.class.options(opts) # Build options from action class

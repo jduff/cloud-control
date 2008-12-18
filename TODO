@@ -1,9 +1,12 @@
 Initial Command:
 
-* Define sprinkle scripts for setting up HAProxy Node
-* Define sprinkle scripts for setting up Database Node
-* Figure out how to update the configuration files on the servers
+* Initiate cap deploy
+* Create image of instance and save to S3
+* Start multiple instances of image and deploy
 
+DONE * Dynamically generate cap config and pass to sprinkle instead of generating a file
+DONE * Define sprinkle scripts for setting up HAProxy Node
+DONE * Define sprinkle scripts for setting up Database Node
 DONE * YAML File to define basic deployment configuration
 DONE * Start an instance of an EC2 AMI
 DONE * Sprinkle the instance

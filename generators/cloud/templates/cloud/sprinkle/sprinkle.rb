@@ -14,14 +14,14 @@ require 'cloud/sprinkle/packages/rails'
 # If there's only one implementation of a virtual package, it's selected automatically, otherwise
 # the user is requested to select which one to use.
  
-policy :rails, :roles => :application do
+policy :rails, :roles => :app do
   requires :build_essential
   requires :apache
   requires :rails
   requires :rubygems
 end
 
-policy :database, :roles => :database do
+policy :database, :roles => :db do
   requires :build_essential
   requires :mysql
 end
@@ -39,21 +39,21 @@ end
 # Configures spinkle to use capistrano for delivery of commands to the remote machines (via
 # the named 'deploy' recipe). Also configures 'source' installer defaults to put package gear
 # in /usr/local
- 
-deployment do
 
+deployment do
+ 
   # mechanism for deployment
   delivery :capistrano do
-    recipes 'config/deploy'
+    recipes 'deploy'
   end
-
+ 
   # source based package installer defaults
   source do
-    prefix   '/usr/local'           # where all source packages will be configured to install
-    archives '/usr/local/sources'   # where all source packages will be downloaded to
-    builds   '/usr/local/build'     # where all source packages will be built
+    prefix '/usr/local'
+    archives '/usr/local/sources'
+    builds '/usr/local/build'
   end
-
+ 
 end
 
 # End of script, given the above information, Spinkle will apply the defined policy on all roles using the

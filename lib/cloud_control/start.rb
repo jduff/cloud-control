@@ -7,7 +7,6 @@ class Start < CloudControl::Base
 
   attr_accessor :aws_config
   attr_accessor :ec2
-  attr_accessor :deployment
   
   def self.options(opts)
     opts.on("-d", "--deployment-config", "Deployment Configuration File") do |deployment_config_path|
@@ -26,14 +25,13 @@ class Start < CloudControl::Base
   
   def load_deployment_config
     deployment_config = YAML.load_file(CloudControl::Manager.options[:deployment_config_path])
-    @deployment = {}
-    @deployment[:roles] = deployment_config.keys
+    CloudControl::Manager.deployment[:roles] = deployment_config.keys
   end
   
   def generate_cap_config
-    deployment_configuration = OpenStruct.new(deployment)
+    deployment_configuration = OpenStruct.new(CloudControl::Manager.deployment)
     template_file = File.join(File.dirname(__FILE__), '..', '..', 'templates', 'stage.rb.erb')
-    output_file = File.join(CloudControl::Manager.options[:capistrano_config_output_dir], CloudControl::Manager.options[:environment] + '.rb')
+    output_file = File.join(CloudControl::Manager.options[:capistrano_config_output_dir], CloudControl::Manager.options[:stage] + '.rb')
     capistrano_config = ERB.new(File.read(template_file)).result(deployment_configuration.send(:binding))
     File.open(output_file, 'w') << capistrano_config
   end
@@ -46,25 +44,25 @@ class Start < CloudControl::Base
   def start_instances
     puts 'Running instances ...'
     
-    deployment[:ssh_keys] = [@aws_config["key_file"]]
+    CloudControl::Manager.deployment[:ssh_keys] = [@aws_config["key_file"]]
     
-    run_instances_for_roles(deployment[:roles])
+    run_instances_for_roles(CloudControl::Manager.deployment[:roles])
     
     puts 'Waiting for instances to register ...'
-    roles = deployment[:roles].dup
+    roles = CloudControl::Manager.deployment[:roles].dup
     while(roles.size > 0)
       sleep 2
       describe_response = @ec2.describe_instances
       describe_response.reservationSet.item.each do |instance|
 
-        if deployment[:reservation_ids].include?(instance.reservationId) && instance_running?(instance)
-          deployment[:reservation_ids].delete(instance.reservationId)
+        if CloudControl::Manager.deployment[:reservation_ids].include?(instance.reservationId) && instance_running?(instance)
+          CloudControl::Manager.deployment[:reservation_ids].delete(instance.reservationId)
           role = roles.pop
-          deployment[role.to_sym] = {}
+          CloudControl::Manager.deployment[role.to_sym] = {}
           puts "#{role} instance running."
-          deployment[role.to_sym][:instange_id] = instance.instancesSet.item.first.instanceId
-          deployment[role.to_sym][:private_hostname] = instance.instancesSet.item.first.privateDnsName
-          deployment[role.to_sym][:public_hostname] = instance.instancesSet.item.first.dnsName
+          CloudControl::Manager.deployment[role.to_sym][:instange_id] = instance.instancesSet.item.first.instanceId
+          CloudControl::Manager.deployment[role.to_sym][:private_hostname] = instance.instancesSet.item.first.privateDnsName
+          CloudControl::Manager.deployment[role.to_sym][:public_hostname] = instance.instancesSet.item.first.dnsName
         end
       end
     end
@@ -72,9 +70,9 @@ class Start < CloudControl::Base
   end
   
   def run_instances_for_roles(roles)
-    deployment[:roles].each do |role|
+    CloudControl::Manager.deployment[:roles].each do |role|
       run_response = @ec2.run_instances(:key_name => @aws_config["key_name"], :image_id => @aws_config["base_ami_id"], :group_id => @aws_config["ssh_security_group"])
-      (deployment[:reservation_ids] ||= []) << run_response.reservationId
+      (CloudControl::Manager.deployment[:reservation_ids] ||= []) << run_response.reservationId
       puts "Instance starting for role #{role}, reservation id: " + run_response.reservationId
     end
   end
