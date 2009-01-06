@@ -22,6 +22,7 @@ module CloudControl
       @deployment = {}
       @options = {
         :stage => "staging",
+        :environment => "staging",
         # :action => "deploy",
         :aws_config_path => "cloud/aws.yml",
         :sprinkle_config_path => "cloud/sprinkle/sprinkle.rb",
@@ -54,6 +55,10 @@ module CloudControl
         opts.on("-a", "--aws-config FILE", "Path to Amazon AWS YAML File") { |aws_config_path|
           CloudControl::Manager.options[:aws_config_path] = aws_config_path
         }
+        
+        opts.on("-e", "--environment ENVIRONMENT", "The Rails Environment that app will run in, default staging") { |environment|
+          CloudControl::Manager.options[:environment] = environment
+        }
       
         opts.on("-V", "--version", "Cloud Control version") do
           puts "CloudControl Version 0.0.1"
@@ -72,3 +77,14 @@ module CloudControl
 
   end
 end
+
+module Sprinkle
+  module Deployment
+    class Deployment
+      def delivery(type, &block)
+        @style = ("Sprinkle::Actors::" + type.to_s.titleize).constantize.new &block
+      end
+    end
+  end
+end
+

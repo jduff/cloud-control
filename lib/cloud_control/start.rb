@@ -19,7 +19,7 @@ class Start < CloudControl::Base
     load_aws_config
     load_deployment_config
     start_instances
-    generate_cap_config
+    # generate_cap_config
     save_state
   end
   

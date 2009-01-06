@@ -35,6 +35,7 @@ class CloudGenerator < RubiGen::Base
                                 sprinkle/packages/haproxy.rb
                                 sprinkle/packages/mysql.rb
                                 sprinkle/packages/rails.rb
+                                sprinkle/packages/passenger.rb
                              ), 'cloud', { :collision => :force }
     end
   end

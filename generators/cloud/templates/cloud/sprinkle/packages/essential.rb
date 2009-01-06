@@ -5,3 +5,9 @@ package :build_essential do
     pre :install, 'apt-get update'
   end
 end
+
+package :build do
+  description "Ruby header files for extensions"
+  apt 'ruby1.8-dev'
+  requires :build_essential
+end

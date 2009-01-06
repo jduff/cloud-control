@@ -3,6 +3,7 @@ require 'cloud/sprinkle/packages/apache'
 require 'cloud/sprinkle/packages/haproxy'
 require 'cloud/sprinkle/packages/mysql'
 require 'cloud/sprinkle/packages/rails'
+require 'cloud/sprinkle/packages/passenger'
  
  
 # Policies
@@ -15,19 +16,19 @@ require 'cloud/sprinkle/packages/rails'
 # the user is requested to select which one to use.
  
 policy :rails, :roles => :app do
-  requires :build_essential
-  requires :apache
+  requires :build
+  requires :ruby_enterprise
   requires :rails
   requires :rubygems
 end
 
 policy :database, :roles => :db do
-  requires :build_essential
+  requires :build
   requires :mysql
 end
   
 policy :balancer, :roles => :balancer do
-  requires :build_essential
+  requires :build
   requires :haproxy
 end 
  
