@@ -2,6 +2,8 @@ package :apache, :provides => :webserver do
   description 'Apache2 web server.'
   apt 'apache2 apache2.2-common apache2-mpm-prefork apache2-utils libexpat1 ssl-cert' do
     post :install, 'a2enmod rewrite'
+    post :install, 'a2dissite 000-default'
+    post :install, '/etc/init.d/apache2 restart'
   end
   
   verify do

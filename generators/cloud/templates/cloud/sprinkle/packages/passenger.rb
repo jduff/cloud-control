@@ -37,7 +37,7 @@ package :passenger, :provides => :appserver do
     [%Q(LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-#{version}/ext/apache2/mod_passenger.so),
     %Q(PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-#{version}),
     %q(PassengerRuby /usr/bin/ruby1.8),
-    %q(RailsEnv development)].each do |line|
+    %q(RailsEnv staging)].each do |line|
       post :install, "echo '#{line}' >> /etc/apache2/extras/passenger.conf"
     end
     

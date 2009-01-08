@@ -19,7 +19,7 @@ class Start < CloudControl::Base
     load_aws_config
     load_deployment_config
     start_instances
-    # generate_cap_config
+    generate_cap_config
     save_state
   end
   
@@ -71,7 +71,7 @@ class Start < CloudControl::Base
   
   def run_instances_for_roles(roles)
     CloudControl::Manager.deployment[:roles].each do |role|
-      run_response = @ec2.run_instances(:key_name => @aws_config["key_name"], :image_id => @aws_config["base_ami_id"], :group_id => @aws_config["ssh_security_group"])
+      run_response = @ec2.run_instances(:key_name => @aws_config["key_name"], :image_id => @aws_config["base_ami_id"], :group_id => ["default", @aws_config["ssh_security_group"], @aws_config["http_security_group"]])
       (CloudControl::Manager.deployment[:reservation_ids] ||= []) << run_response.reservationId
       puts "Instance starting for role #{role}, reservation id: " + run_response.reservationId
     end

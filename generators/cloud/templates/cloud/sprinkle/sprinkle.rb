@@ -17,7 +17,9 @@ require 'cloud/sprinkle/packages/passenger'
  
 policy :rails, :roles => :app do
   requires :build
-  requires :ruby_enterprise
+  requires :passenger
+  # requires :ruby_enterprise
+  requires :mysql_ruby_driver
   requires :rails
   requires :rubygems
 end
@@ -25,6 +27,7 @@ end
 policy :database, :roles => :db do
   requires :build
   requires :mysql
+  requires :mysql_ruby_driver
 end
   
 policy :balancer, :roles => :balancer do

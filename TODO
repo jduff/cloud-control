@@ -1,9 +1,11 @@
 Initial Command:
 
-* Create some basic cap deploy tasks using passenger
+* Create cap tasks to alter haproxy config appropriately
 * Create image of instance and save to S3
 * Start multiple instances of image and deploy
 
+DONE (Could be refined) * Start roles with defined security groups
+DONE * Create some basic cap deploy tasks using passenger
 DONE * Update sprinkle scripts for passenger
 DONE * Initiate cap deploy
 DONE * Dynamically generate cap config and pass to sprinkle instead of generating a file

@@ -32,7 +32,7 @@ module CloudControl
       }
       
       @options[:action] = ARGV.pop
-      @options[:stage] = ARGV.pop
+      # @options[:stage] = ARGV.pop
    
       if !AVAILABLE_ACTIONS.include?(@options[:action])
         puts "Sorry, \"#{@options[:action]}\" is not a valid action to preform."
