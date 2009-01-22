@@ -1,5 +1,8 @@
 <% roles.each do |role| %>
-role :<%= role %>, "<%= send(role.to_sym)[:public_hostname] %>"
+<% db_primary = role == "db" ? ", :primary => true" : "" %>
+role :<%= role %>, "<%= send(role)["private_hostname"] %>"<%= db_primary %>
 <% end %>
 
 ssh_options[:keys] = %w(<%= ssh_keys.join(' ') %>)
+
+set :gateway, "<%= send(:balancer)["public_hostname"] %>"

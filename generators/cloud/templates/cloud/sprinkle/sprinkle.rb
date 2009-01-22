@@ -4,7 +4,7 @@ require 'cloud/sprinkle/packages/haproxy'
 require 'cloud/sprinkle/packages/mysql'
 require 'cloud/sprinkle/packages/rails'
 require 'cloud/sprinkle/packages/passenger'
- 
+require 'cloud/sprinkle/packages/gems'
  
 # Policies
 #
@@ -19,16 +19,19 @@ policy :rails, :roles => :app do
   requires :build
   requires :passenger
   # requires :ruby_enterprise
-  requires :mysql_ruby_driver
   requires :rails
+  requires :mysql_ruby_driver
   requires :rubygems
+  requires :gems
 end
 
-policy :database, :roles => :db do
-  requires :build
-  requires :mysql
-  requires :mysql_ruby_driver
-end
+# policy :database, :roles => :db do
+#   requires :build
+#   requires :mysql
+#   requires :mysql_ruby_driver
+#   requires :rubygems
+#   requires :gems  
+# end
   
 policy :balancer, :roles => :balancer do
   requires :build

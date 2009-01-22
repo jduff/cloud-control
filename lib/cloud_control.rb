@@ -7,19 +7,22 @@ require File.dirname(__FILE__) + '/../lib/cloud_control/init'
 require File.dirname(__FILE__) + '/../lib/cloud_control/start'
 require File.dirname(__FILE__) + '/../lib/cloud_control/provision'
 require File.dirname(__FILE__) + '/../lib/cloud_control/deploy'
+require File.dirname(__FILE__) + '/../lib/cloud_control/bundle'
 
 module CloudControl
   class Manager
-    AVAILABLE_ACTIONS = %w{ init start provision deploy snapshot }
+    AVAILABLE_ACTIONS = %w{ init start provision deploy bundle }
   
     class << self
       attr_accessor :options
       attr_accessor :deployment
+      attr_accessor :aws_config
     end
 
     def self.execute
       args = ARGV.reverse
       @deployment = {}
+      @aws_config = {}
       @options = {
         :stage => "staging",
         :environment => "staging",

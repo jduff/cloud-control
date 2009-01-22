@@ -29,6 +29,8 @@ class CloudGenerator < RubiGen::Base
                                 deployment.yml 
                              ), 'cloud', { :collision => :skip}
       m.file_copy_each     %w( 
+                                apache.conf.erb
+                                haproxy.cfg.erb
                                 deploy.rb     
                                 sprinkle/sprinkle.rb
                                 sprinkle/packages/apache.rb

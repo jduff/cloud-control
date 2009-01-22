@@ -8,6 +8,6 @@ end
 
 package :build do
   description "Ruby header files for extensions"
-  apt 'ruby1.8-dev'
+  apt 'ruby1.8-dev subversion'
   requires :build_essential
 end

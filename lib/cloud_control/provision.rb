@@ -12,6 +12,7 @@ class Provision < CloudControl::Base
     
   def execute
     load_state
+    load_aws_config
     
     powder = Sprinkle::Script.new
     powder.instance_eval(File.read(CloudControl::Manager.options[:sprinkle_config_path]), CloudControl::Manager.options[:sprinkle_config_path])
@@ -19,9 +20,10 @@ class Provision < CloudControl::Base
       # mechanism for deployment
       delivery :capistrano do
         config.set :run_method, :run
-        config.ssh_options[:keys] = CloudControl::Manager.deployment[:ssh_keys].join(' ')
-        CloudControl::Manager.deployment[:roles].each do |role|
-          config.role(role.to_sym, CloudControl::Manager.deployment[role.to_sym][:public_hostname])
+        
+        config.ssh_options[:keys] = CloudControl::Manager.aws_config["key_file"]
+        CloudControl::Manager.deployment.keys.each do |role|
+          config.role(role.to_sym, CloudControl::Manager.deployment[role]["public_hostname"])
         end
         
       end

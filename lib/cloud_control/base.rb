@@ -1,20 +1,22 @@
 module CloudControl
   class Base
     
-    attr_accessor :deployment
-    
-    def initialize
-      @deployment = {}
-    end
-
     def save_state
       File.open('cloud/cloud_control.state', 'w') do |state|
         YAML.dump(CloudControl::Manager.deployment, state)
       end
     end
     
-    def load_state
-      CloudControl::Manager.deployment = YAML.load_file('cloud/cloud_control.state') if File.exists?('cloud/cloud_control.state')
+    def load_aws_config
+      CloudControl::Manager.aws_config = YAML.load_file(CloudControl::Manager.options[:aws_config_path])
+    end
+    
+    def load_state(only_deployment=false)
+      if File.exists?('cloud/cloud_control.state') && !only_deployment
+        CloudControl::Manager.deployment = YAML.load_file('cloud/cloud_control.state') 
+      else 
+        CloudControl::Manager.deployment = YAML.load_file(CloudControl::Manager.options[:deployment_config_path])
+      end
     end
     
     def self.get_actions(actions)

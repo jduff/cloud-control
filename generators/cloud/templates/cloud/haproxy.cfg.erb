@@ -1,0 +1,31 @@
+global
+  log 127.0.0.1	local0
+  log 127.0.0.1	local1 notice
+  #log loghost	local0 info
+  maxconn 4096
+  #debug
+  #quiet
+  user haproxy
+  group haproxy
+
+defaults
+	log	global
+	mode	http
+	option	httplog
+	option	dontlognull
+	retries	3
+	redispatch
+	maxconn	2000
+	contimeout	5000
+	clitimeout	50000
+	srvtimeout	50000
+
+listen webfarm 0.0.0.0:80
+  mode http
+  balance roundrobin
+  option httpchk HEAD / HTTP/1.0
+  option httpclose
+  option forwardfor
+<% servers.each_with_index do |server, index| %>
+  server web<%= index %> <%= server.to_s %>:80 check
+<% end %>

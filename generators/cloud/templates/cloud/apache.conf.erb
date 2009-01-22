@@ -1,0 +1,13 @@
+<VirtualHost *>
+	ServerAdmin webmaster@localhost
+	
+	DocumentRoot <%= current_path %>/public
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+	
+	CustomLog /var/log/apache2/<%= application %>.<%= stage %>.log combined
+	ServerSignature On
+
+</VirtualHost>

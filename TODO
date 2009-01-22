@@ -1,10 +1,14 @@
 Initial Command:
 
-* Create cap tasks to alter haproxy config appropriately
-* Create image of instance and save to S3
-* Start multiple instances of image and deploy
+* Replace puts with a logger and allow verbosity in options
+* Seperate bin to cloudctl-start cloudctl-deploy etc and have cloudctl deploy look up appropriate binary
 
-DONE (Could be refined) * Start roles with defined security groups
+DONE * Allow more detailed configuration of deployment.yml (base ami, instance type, instance id, security groups)
+DONE * Move db creation to cap task
+DONE * Register image and run instance
+DONE * Create image of instance and save to S3
+DONE * Create cap tasks to alter haproxy config appropriately
+DONE * Start roles with defined security groups
 DONE * Create some basic cap deploy tasks using passenger
 DONE * Update sprinkle scripts for passenger
 DONE * Initiate cap deploy

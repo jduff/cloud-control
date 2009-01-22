@@ -8,21 +8,31 @@ class Deploy < CloudControl::Base
     
   def execute
     load_state
+    load_aws_config
 
     capistrano = Capistrano::Configuration.new
     capistrano.load 'standard'
-    capistrano.load 'Capfile'
     capistrano.load 'cloud/deploy'
+    capistrano.load 'Capfile'
 
     capistrano.logger.level = 10
     
     capistrano.set :run_method, :run
+    capistrano.set :user, 'root'
     capistrano.set :stage, CloudControl::Manager.options[:stage]
-    capistrano.ssh_options[:keys] = CloudControl::Manager.deployment[:ssh_keys].join(' ')
+   capistrano.set :rails_env, CloudControl::Manager.options[:environment]
+    capistrano.set :gateway, CloudControl::Manager.deployment["balancer"]["public_hostname"]
+        
+    capistrano.ssh_options[:keys] = CloudControl::Manager.aws_config["key_file"]
     
-    CloudControl::Manager.deployment[:roles].each do |role|
-      capistrano.role(role.to_sym, CloudControl::Manager.deployment[role.to_sym][:public_hostname])
-      capistrano.role((role + "_private").to_sym, CloudControl::Manager.deployment[role.to_sym][:private_hostname], :no_release => true)
+    pp capistrano.ssh_options[:keys]
+    
+    CloudControl::Manager.deployment.keys.each do |role|
+      if role == "db"
+        capistrano.role(role.to_sym, CloudControl::Manager.deployment[role]["private_hostname"], :primary => true)
+      else
+        capistrano.role(role.to_sym, CloudControl::Manager.deployment[role]["private_hostname"])
+      end
     end
 
     capistrano.find_and_execute_task("deploy:setup", :before => :start, :after => :finish)
