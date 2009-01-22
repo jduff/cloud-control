@@ -1,6 +1,6 @@
 require 'echoe'
 
-Echoe.new('cloud_control', '0.0.1') do |gem|
+Echoe.new('cloud-control', '0.0.1') do |gem|
   gem.description               = 'Controls the Cloud'
   gem.author                    = 'Josh Reynolds'
   gem.email                     = 'jreynolds@overlay.tv'

@@ -86,7 +86,6 @@ class Start < CloudControl::Base
             :instance_type => CloudControl::Manager.deployment[role]["instance_type"] || "m1.small",
             :group_id => CloudControl::Manager.deployment[role]["security_groups"]
           )
-        pp CloudControl::Manager.deployment[role]["security_groups"]
         starting_roles << role
         reservation_ids << run_response.reservationId
         puts "Instance starting for role #{role}, reservation id: " + run_response.reservationId
