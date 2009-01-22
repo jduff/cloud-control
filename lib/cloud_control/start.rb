@@ -1,3 +1,4 @@
+gem 'amazon-ec2', '0.3.2'
 require 'ec2'
 require 'ostruct'
 require 'erb'
