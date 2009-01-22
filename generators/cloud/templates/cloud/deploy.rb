@@ -5,7 +5,7 @@ require 'erb'
 #   with_env("LC_ALL", "C") { `svn info -rHEAD` }
 # }
 
-if !get(:database_password, nil)
+if !fetch(:database_password, nil)
   set(:database_password) do
     Capistrano::CLI.ui.ask "Database Password: "
   end

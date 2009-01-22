@@ -1,7 +1,9 @@
 Initial Command:
 
+* Properly define gem dependancies
 * Replace puts with a logger and allow verbosity in options
 * Seperate bin to cloudctl-start cloudctl-deploy etc and have cloudctl deploy look up appropriate binary
+* Remove use of gateway?
 
 DONE * Allow more detailed configuration of deployment.yml (base ami, instance type, instance id, security groups)
 DONE * Move db creation to cap task
