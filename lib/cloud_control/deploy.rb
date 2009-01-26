@@ -12,21 +12,19 @@ class Deploy < CloudControl::Base
 
     capistrano = Capistrano::Configuration.new
     capistrano.load 'standard'
-    capistrano.load 'cloud/deploy'
     capistrano.load 'Capfile'
+    capistrano.load 'cloud/deploy'
 
     capistrano.logger.level = 10
     
     capistrano.set :run_method, :run
     capistrano.set :user, 'root'
     capistrano.set :stage, CloudControl::Manager.options[:stage]
-   capistrano.set :rails_env, CloudControl::Manager.options[:environment]
+    capistrano.set :rails_env, CloudControl::Manager.options[:environment]
     capistrano.set :gateway, CloudControl::Manager.deployment["balancer"]["public_hostname"]
         
     capistrano.ssh_options[:keys] = CloudControl::Manager.aws_config["key_file"]
-    
-    pp capistrano.ssh_options[:keys]
-    
+       
     CloudControl::Manager.deployment.keys.each do |role|
       if role == "db"
         capistrano.role(role.to_sym, CloudControl::Manager.deployment[role]["private_hostname"], :primary => true)

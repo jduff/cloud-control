@@ -23,6 +23,7 @@ policy :rails, :roles => :app do
   requires :mysql_ruby_driver
   requires :rubygems
   requires :gems
+  requires :nfs
 end
 
 # policy :database, :roles => :db do

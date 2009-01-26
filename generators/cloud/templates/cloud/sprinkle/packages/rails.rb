@@ -18,3 +18,8 @@ package :rails do
   gem 'rails'
   version '2.2.2'
 end
+
+package :nfs do
+  description 'NFS Client Software'
+  apt 'nfs-common'
+end
