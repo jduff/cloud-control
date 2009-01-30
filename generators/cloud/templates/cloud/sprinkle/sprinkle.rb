@@ -24,6 +24,7 @@ policy :rails, :roles => :app do
   requires :rubygems
   requires :gems
   requires :nfs
+  requires :sendmail
 end
 
 # policy :database, :roles => :db do

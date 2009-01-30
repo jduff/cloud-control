@@ -1,0 +1,11 @@
+access_key_id: 
+secret_access_key: 
+account_id: 
+base_ami_id: 
+key_name: 
+key_file: 
+cert_file:
+ami_s3_bucket:
+ssh_security_group: 
+http_security_group: 
+    

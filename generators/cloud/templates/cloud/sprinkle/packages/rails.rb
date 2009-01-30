@@ -23,3 +23,7 @@ package :nfs do
   description 'NFS Client Software'
   apt 'nfs-common'
 end
+
+package :sendmail do
+  apt 'sendmail'
+end
